@@ -44,6 +44,33 @@ const char* roundResult(string playerMove, string compMove) {
     }
 }
 
+int scoreResult(string playerMove, string compMove) {
+    if (playerMove == compMove) {
+        return 0;
+    }
+    if (playerMove == "r" && compMove == "p") {
+        return -1;
+    }
+    if (playerMove == "r" && compMove == "s") {
+        return 1;
+    }
+    if (playerMove == "p" && compMove == "r") {
+        return 1;
+    }
+    if (playerMove == "p" && compMove == "s") {
+        return -1;
+    }
+    if (playerMove == "s" && compMove == "r") {
+        return -1;
+    }
+    if (playerMove == "s" && compMove == "p") {
+        return 1;
+    }
+    else {
+        return 0;
+    }
+}
+
 Color colorResult(string playerMove, string compMove, Sound war, Sound rock, Sound paper, Sound scissors) {
     if (playerMove == compMove) {
         PlaySound(war);
@@ -99,6 +126,7 @@ int main()
     Color winLose = BLACK;
     string playerMove;
     string compMove;
+    int totalScore = 0;
     const char* flavorText = "";
 
     // Game Loop
@@ -112,18 +140,21 @@ int main()
             playerMove = "r";
             compMove = getComputerMove(rand() % 3);
             flavorText = roundResult(playerMove, compMove);
+            totalScore += scoreResult(playerMove, compMove);
             winLose = colorResult(playerMove, compMove, wind, impact, crumple, blade);
         }
         if (paper.IsPressed(mousePosition, mousePressed)){
             playerMove = "p";
             compMove = getComputerMove(rand() % 3);
             flavorText = roundResult(playerMove, compMove);
+            totalScore += scoreResult(playerMove, compMove);
             winLose = colorResult(playerMove, compMove, wind, impact, crumple, blade);
         }
         if (scissors.IsPressed(mousePosition, mousePressed)){
             playerMove = "s";
             compMove = getComputerMove(rand() % 3);
             flavorText = roundResult(playerMove, compMove);
+            totalScore += scoreResult(playerMove, compMove);
             winLose = colorResult(playerMove, compMove, wind, impact, crumple, blade);
         }
         
@@ -132,6 +163,7 @@ int main()
             ClearBackground(BLACK);
             DrawTexture(background, 0, 0, WHITE);
             DrawText(flavorText, 100, 180, 30, winLose);
+            DrawText(TextFormat("Score: %d", totalScore), 350, 0, 30, BLACK);
             rock.Draw();
             paper.Draw();
             scissors.Draw();
